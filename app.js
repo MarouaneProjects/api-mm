@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // DB Connection
-require('./models');
+require('./src/models');
 
 const whitelist = [process.env.DOMAIN_URL]
 
@@ -43,24 +43,24 @@ app.use(function (req, res, next) {
 });
 
 // Import required routes
-const userRoutes = require('./routes/users');
-const farmerRoutes = require('./routes/farmers');
-const wholesalerRoutes = require('./routes/wholesalers');
-const productRoutes = require('./routes/products');
-const categoryRoutes = require('./routes/categories');
-const transactionRoutes = require('./routes/transactions');
-const orderRoutes = require('./routes/orders');
-const reviewRoutes = require('./routes/reviews');
-const notificationRoutes = require('./routes/notifications');
-const subscriptionRoutes = require('./routes/subscriptions');
-const farmManagementRoutes = require('./routes/farmManagement');
-const variablePriceRoutes = require('./routes/variablePrices');
-const autoSalesRoutes = require('./routes/autoSales');
-const messageRoutes = require('./routes/messages');
-const adviceRoutes = require('./routes/advices');
-const eventRoutes = require('./routes/events');
-const promotionRoutes = require('./routes/promotions');
-const farmRoutes = require('./routes/farms'); // Import farmRoutes
+const userRoutes = require('./src/routes/users');
+// const farmerRoutes = require('./src/routes/farmers');
+// const wholesalerRoutes = require('./src/routes/wholesalers');
+// const productRoutes = require('./src/routes/products');
+// const categoryRoutes = require('./src/routes/categories');
+// const transactionRoutes = require('./src/routes/transactions');
+// const orderRoutes = require('./src/routes/orders');
+// const reviewRoutes = require('./src/routes/reviews');
+// const notificationRoutes = require('./src/routes/notifications');
+// const subscriptionRoutes = require('./src/routes/subscriptions');
+// const farmManagementRoutes = require('./src/routes/farmManagement');
+// const variablePriceRoutes = require('./src/routes/variablePrices');
+// const autoSalesRoutes = require('./src/routes/autoSales');
+// const messageRoutes = require('./src/routes/messages');
+// const adviceRoutes = require('./src/routes/advices');
+// const eventRoutes = require('./src/routes/events');
+// const promotionRoutes = require('./src/routes/promotions');
+// const farmRoutes = require('./src/routes/farms'); // Import farmRoutes
 
 
 // health api
@@ -70,23 +70,23 @@ app.get('/api/health', (req, res) =>
 
 // Use the routes
 app.use('/users', userRoutes);
-app.use('/farmers', farmerRoutes);
-app.use('/wholesalers', wholesalerRoutes);
-app.use('/products', productRoutes);
-app.use('/categories', categoryRoutes);
-app.use('/transactions', transactionRoutes);
-app.use('/orders', orderRoutes);
-app.use('/reviews', reviewRoutes);
-app.use('/notifications', notificationRoutes);
-app.use('/subscriptions', subscriptionRoutes);
-app.use('/farm-management', farmManagementRoutes);
-app.use('/variable-prices', variablePriceRoutes);
-app.use('/auto-sales', autoSalesRoutes);
-app.use('/messages', messageRoutes);
-app.use('/advices', adviceRoutes);
-app.use('/events', eventRoutes);
-app.use('/promotions', promotionRoutes);
-app.use('/farms', farmRoutes); // Use farmRoutes
+// app.use('/farmers', farmerRoutes);
+// app.use('/wholesalers', wholesalerRoutes);
+// app.use('/products', productRoutes);
+// app.use('/categories', categoryRoutes);
+// app.use('/transactions', transactionRoutes);
+// app.use('/orders', orderRoutes);
+// app.use('/reviews', reviewRoutes);
+// app.use('/notifications', notificationRoutes);
+// app.use('/subscriptions', subscriptionRoutes);
+// app.use('/farm-management', farmManagementRoutes);
+// app.use('/variable-prices', variablePriceRoutes);
+// app.use('/auto-sales', autoSalesRoutes);
+// app.use('/messages', messageRoutes);
+// app.use('/advices', adviceRoutes);
+// app.use('/events', eventRoutes);
+// app.use('/promotions', promotionRoutes);
+// app.use('/farms', farmRoutes); // Use farmRoutes
 
 
 //Handles 404 errors
