@@ -1,25 +1,45 @@
 require('dotenv').config(); // Load environment variables from .env file
-const { Sequelize } = require('sequelize');
-const bodyParser = require('body-parser');
-const mysql = require('mysql2');
 const express = require('express');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
+
+//  Initial expess
 const app = express();
 
-// Create MySQL connection
-const connection = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASE
-});
+// Middlewares
+app.use(express.json());
+app.use(cookieParser());
 
-// Check MySQL connection
-connection.connect((err) => {
-  if (err) {
-    console.error('Error connecting to MySQL database:', err);
-    return;
-  }
-  console.log('Connected to MySQL database');
+// DB Connection
+require('./models');
+
+const whitelist = [process.env.DOMAIN_URL]
+
+
+// Initial CORS
+app.use(
+    cors({
+        origin: whitelist,
+        credentials: true,
+    })
+);
+
+// authorise CROS
+app.use(function (req, res, next) {
+
+    res.header('Access-Control-Allow-Credentials', true);
+
+    var origin = req.headers.origin;
+
+    if (whitelist.indexOf(origin) != -1) {
+        res.header("Access-Control-Allow-Origin", origin);
+    }
+
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    // X-Token-Auth
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+
+    next();
 });
 
 // Import required routes
@@ -42,6 +62,12 @@ const eventRoutes = require('./routes/events');
 const promotionRoutes = require('./routes/promotions');
 const farmRoutes = require('./routes/farms'); // Import farmRoutes
 
+
+// health api
+app.get('/api/health', (req, res) =>
+    res.status(200).json({ env: process.env.DOMAIN_URL })
+);
+
 // Use the routes
 app.use('/users', userRoutes);
 app.use('/farmers', farmerRoutes);
@@ -62,21 +88,24 @@ app.use('/events', eventRoutes);
 app.use('/promotions', promotionRoutes);
 app.use('/farms', farmRoutes); // Use farmRoutes
 
-// Body parsing middleware
-app.use(express.json());
-// app.use(express.urlencoded({ extended: true }));
 
-
-const sequelize = new Sequelize(process.env.DB_DATABASE, process.env.DB_USER, process.env.DB_PASSWORD, {
-  host: process.env.DB_HOST,
-  dialect: 'mysql',
-  port: process.env.DB_PORT,
+//Handles 404 errors
+app.use((req, res, next) => {
+    const error = new Error('Error Occured!');
+    error.status = 404;
+    next(error);
 });
 
-module.exports = sequelize;
-
-// Start the server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.use((error, req, res, next) => {
+    res.status(error.status || 500);
+    res.json({
+        error: {
+            message: error.message,
+        },
+    });
 });
+
+// Start Server
+const port = process.env.PORT || 8000;
+app.listen(port);
+console.log(`server listening on ${port}`);
